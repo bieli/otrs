@@ -108,8 +108,13 @@ sub Run {
         my @Params = $Object->Param( UserData => \%UserData );
         my %GetParam;
         for my $ParamItem (@Params) {
-            my @Array = $Self->{ParamObject}->GetArray( Param => $ParamItem->{Name} );
-            $GetParam{ $ParamItem->{Name} } = \@Array;
+            my @Array = $Self->{ParamObject}->GetArray(
+                Param => $ParamItem->{Name},
+                Raw => $ParamItem->{Raw} || 0,
+            );
+            if (defined $ParamItem->{Name}) {
+                $GetParam{ $ParamItem->{Name} } = \@Array;
+            }
         }
         my $Message  = '';
         my $Priority = '';
