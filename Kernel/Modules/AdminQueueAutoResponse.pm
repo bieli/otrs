@@ -34,6 +34,8 @@ sub new {
         }
     }
 
+    # create extra needed objects
+    $Self->{ValidObject}         = Kernel::System::Valid->new(%Param);
     $Self->{AutoResponseObject} = Kernel::System::AutoResponse->new(%Param);
     $Self->{QueueObject}        = Kernel::System::Queue->new(%Param);
 
@@ -78,7 +80,8 @@ sub Run {
             my %Data = $Self->{DBObject}->GetTableData(
                 Table => 'auto_response ar, auto_response_type art',
                 What  => 'ar.id, ar.name',
-                Where => " art.id = $TypeID AND ar.type_id = art.id",
+                Where => " art.id = $TypeID AND ar.type_id = art.id "
+                    . "AND ar.valid_id IN ( ${\(join ', ', $Self->{ValidObject}->ValidIDsGet())} )",
             );
             my ( $SelectedID, $Name ) = $Self->{DBObject}->GetTableData(
                 Table => 'auto_response ar, auto_response_type art, queue_auto_response qar',
