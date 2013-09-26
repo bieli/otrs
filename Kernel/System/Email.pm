@@ -706,9 +706,9 @@ sub Send {
     }
 
     # set envelope sender for autoresponses and notifications
-    if ( $Param{Loop} ) {
-        $RealFrom = $Self->{ConfigObject}->Get('SendmailNotificationEnvelopeFrom') || '';
-    }
+    if ( $Param{Loop} && length($Self->{ConfigObject}->Get('SendmailNotificationEnvelopeFrom') > 0) ) 
+        $RealFrom = $Self->{ConfigObject}->Get('SendmailNotificationEnvelopeFrom');
+     }
 
     # debug
     if ( $Self->{Debug} > 1 ) {
